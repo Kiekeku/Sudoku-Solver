@@ -11,6 +11,7 @@ public class Cell {
         this.number = number;
         this.boxID = boxID;
     }
+
     // requires: 0 <= number <= 9
     // modifies: this
     // effects: sets this cell's number to number
@@ -19,10 +20,10 @@ public class Cell {
     }
 
     public int getNumber() {
-        return number; // stub
+        return number;
     }
 
     public int getBoxID() {
-        return boxID; // stub
+        return boxID;
     }
 }
