@@ -4,21 +4,21 @@ package model;
 public class Cell {
 
     // effects: constructs a new cell with the given number and boxID.
-    private void Cell(int number, int boxID) {
+    public Cell(int number, int boxID) {
 
     }
-    // requires: 0 < number < 10
+    // requires: 0 <= number <= 9
     // modifies: this
     // effects: sets this cell's number to number
-    private void setNumber(int number) {
+    public void setNumber(int number) {
 
     }
 
-    private void getNumber() {
-
+    public int getNumber() {
+        return 0; // stub
     }
 
-    private void getBoxID() {
-
+    public int getBoxID() {
+        return 0; // stub
     }
 }
