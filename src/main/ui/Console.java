@@ -5,15 +5,20 @@ import java.util.Scanner;
 
 import model.Board;
 
+// the main UI console that deals with all user inputs
 public class Console {
 
     Scanner scanner;
     ArrayList<SavedBoard> savedBoards;
+
+    // modifies: this
+    // effects: creates new console with new scanner and no saved boards
     public Console() {
         scanner = new Scanner(System.in);
         savedBoards = new ArrayList<SavedBoard>();
     }
 
+    // effects: runs main loop
     public void run() {
         boolean running = true;
         while (running) {
@@ -43,6 +48,7 @@ public class Console {
         }
     }
 
+    // effects: prints menu
     private void printMenu() {
         System.out.println("\n--- Sudoku Solver ---");
         System.out.println("1) Input an unsolved board and view solution (plus save).");
@@ -53,31 +59,37 @@ public class Console {
         System.out.print("Choose an option: ");
     }
 
-    /**
-     * As a user, I want to input an unsolved sudoku board and see the solution.
-     *    Then optionally save the pairing.
-     */
+    // modifies: this
+    // effects: inputs sudoku board, solves it and saves the pairing if the user
+    // wants to
     private void handleInputBoard() {
         System.out.println("\nPlease input 9 lines, each with 9 digits (0 for empty), separated by spaces.");
         int[][] unsolved = new int[9][9];
         for (int row = 0; row < 9; row++) {
-            System.out.print("Row " + (row + 1) + ": ");
-            String[] input = scanner.nextLine().split(" ");
-            if (input.length < 9) {
-                System.out.println("Invalid input, please re-enter row " + (row + 1));
-                row--;
-                continue;
-            }
-            for (int col = 0; col < 9; col++) {
-                if (Integer.parseInt(input[col]) > 9 || Integer.parseInt(input[col]) < 0) {
-                    row--;
-                    break;
+            while (true) {
+                System.out.print("Row " + (row + 1) + ": ");
+                String[] input = scanner.nextLine().trim().split(" ");
+                if (input.length != 9) {
+                    System.out.println("Invalid input. Please enter exactly 9 integers.");
+                    continue;
                 }
-                try {
-                    unsolved[row][col] = Integer.parseInt(input[col]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number. Please re-enter row " + (row + 1));
-                    row--;
+                boolean validRow = true;
+                for (int col = 0; col < 9; col++) {
+                    try {
+                        int val = Integer.parseInt(input[col]);
+                        if (val < 0 || val > 9) {
+                            System.out.println("Number out of range (0-9). Re-enter this row.");
+                            validRow = false;
+                            break;
+                        }
+                        unsolved[row][col] = val;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid integer. Re-enter this row.");
+                        validRow = false;
+                        break;
+                    }
+                }
+                if (validRow) {
                     break;
                 }
             }
@@ -99,13 +111,15 @@ public class Console {
         }
 
         // Ask user to save
-        System.out.print("Do you want to save this board pairing? (y/n) ");
+        System.out.print("Do you want to save this board pairing? (y for yes) ");
         String input = scanner.nextLine().toLowerCase();
         if ("y".equals(input)) {
             saveBoardPairing(unsolvedBoard, solvedBoard);
         }
     }
 
+    // modifies: this
+    // effects: saves a board pairing with a name and note
     private void saveBoardPairing(Board unsolved, Board solved) {
         System.out.print("Enter a name for this board pairing: ");
         String name = scanner.nextLine();
@@ -118,9 +132,7 @@ public class Console {
         System.out.println("Saved board pairing!");
     }
 
-    /**
-     * As a user, I want to view all saved board pairings.
-     */
+    // effects: allows the user to pick which board they want to see
     private void handleViewSavedBoards() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards.");
@@ -130,11 +142,11 @@ public class Console {
         System.out.println("\n--- Saved Boards ---");
         for (int i = 0; i < savedBoards.size(); i++) {
             SavedBoard sb = savedBoards.get(i);
-            System.out.println((i + 1) + ") Name: " + sb.getName() 
-                               + " | Note: " + sb.getNote());
+            System.out.println((i + 1) + ") Name: " + sb.getName()
+                    + " | Note: " + sb.getNote());
         }
 
-        System.out.print("Select a board index to view details (or 0 to go back): ");
+        System.out.print("Select a board index to view details (or anything else to go back): ");
         int choice = readInt();
         if (choice > 0 && choice <= savedBoards.size()) {
             SavedBoard selected = savedBoards.get(choice - 1);
@@ -144,6 +156,7 @@ public class Console {
         }
     }
 
+    // effects: prints name, note, unsolved board, and solved board
     private void displaySavedBoard(SavedBoard sb) {
         System.out.println("\nName: " + sb.getName());
         System.out.println("Note: " + sb.getNote());
@@ -153,9 +166,8 @@ public class Console {
         printBoard(sb.getSolved());
     }
 
-    /**
-     * As a user, I want to delete a saved board pairing.
-     */
+    // modifies: this
+    // effects: deletes the indicated board pairing
     private void handleDeleteSavedBoard() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards to delete.");
@@ -166,7 +178,7 @@ public class Console {
         for (int i = 0; i < savedBoards.size(); i++) {
             System.out.println((i + 1) + ") " + savedBoards.get(i).getName());
         }
-        System.out.print("Select a board index to delete (or 0 to cancel): ");
+        System.out.print("Select a board index to delete (or anything else to cancel): ");
         int choice = readInt();
         if (choice > 0 && choice <= savedBoards.size()) {
             savedBoards.remove(choice - 1);
@@ -176,9 +188,8 @@ public class Console {
         }
     }
 
-    /**
-     * As a user, I want to name and add a note to each saved board pairing.
-     */
+    // modifies: this and SolvedBoard
+    // effects: enables the user to edit the name and note of a board pairing
     private void handleEditSavedBoard() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards to edit.");
@@ -189,7 +200,7 @@ public class Console {
         for (int i = 0; i < savedBoards.size(); i++) {
             System.out.println((i + 1) + ") " + savedBoards.get(i).getName());
         }
-        System.out.print("Select a board index to edit (or 0 to cancel): ");
+        System.out.print("Select a board index to edit (or anything else to cancel): ");
         int choice = readInt();
         if (choice > 0 && choice <= savedBoards.size()) {
             SavedBoard sb = savedBoards.get(choice - 1);
@@ -209,7 +220,7 @@ public class Console {
         }
     }
 
-    // helpers
+    // effects: prints out given board
     private void printBoard(Board b) {
         if (b == null) {
             System.out.println("No board to display.");
@@ -225,17 +236,13 @@ public class Console {
         }
     }
 
+    // effects: handles all int inputs
     private int readInt() {
         int val = -1;
         try {
             String input = scanner.nextLine().trim();
             val = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            // do nothing, return -1
-        }
+        } catch (NumberFormatException e) {}
         return val;
     }
 }
-
-
-

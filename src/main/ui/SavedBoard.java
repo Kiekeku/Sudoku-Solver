@@ -2,12 +2,15 @@ package ui;
 
 import model.Board;
 
+// represents an unsolved board, a solved board, a name, and a note
 public class SavedBoard {
     private String name;
     private String note;
     private Board unsolved;
     private Board solved;
 
+    // modifies: this
+    // effects: creates a board pairing with the given boards, name, and note
     public SavedBoard(String name, String note, Board unsolved, Board solved) {
         this.name = name;
         this.note = note;
