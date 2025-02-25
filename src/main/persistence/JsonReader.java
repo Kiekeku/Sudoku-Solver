@@ -1,5 +1,7 @@
 package persistence;
 
+import java.util.ArrayList;
+
 import model.Board;
 import model.SavedBoard;
 public class JsonReader {
@@ -11,8 +13,8 @@ public class JsonReader {
     }
 
     // effects: returns list of saved boards in the given file
-    private SavedBoard[] read() {
-        return new SavedBoard[1]; //stub
+    private ArrayList<SavedBoard> read() {
+        return new ArrayList<SavedBoard>(); //stub
     }
 
     // effects: returns a string version of the given Json file
