@@ -1,6 +1,4 @@
-package ui;
-
-import model.Board;
+package model;
 
 // represents an unsolved board, a solved board, a name, and a note
 public class SavedBoard {
@@ -14,8 +12,8 @@ public class SavedBoard {
     public SavedBoard(String name, String note, Board unsolved, Board solved) {
         this.name = name;
         this.note = note;
-        this.unsolved = unsolved; // store a copy in real usage
-        this.solved = solved; // store a copy in real usage
+        this.unsolved = unsolved; 
+        this.solved = solved; 
     }
 
     public String getName() {

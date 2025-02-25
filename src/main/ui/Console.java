@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Board;
+import model.SavedBoard;
 
 // the main UI console that deals with all user inputs
 public class Console {
@@ -188,7 +189,7 @@ public class Console {
         }
     }
 
-    // modifies: this and SolvedBoard
+    // modifies: this
     // effects: enables the user to edit the name and note of a board pairing
     private void handleEditSavedBoard() {
         if (savedBoards.isEmpty()) {
@@ -226,7 +227,7 @@ public class Console {
             System.out.println("No board to display.");
             return;
         }
-        int[][] grid = b.getBoard(); // actual int[][] from your model
+        int[][] grid = b.getBoard(); 
         for (int row = 0; row < 9; row++) {
             StringBuilder sb = new StringBuilder();
             for (int col = 0; col < 9; col++) {
