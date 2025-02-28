@@ -1,10 +1,13 @@
 package ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Board;
 import model.SavedBoard;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 // the main UI console that deals with all user inputs
 public class Console {
@@ -12,14 +15,14 @@ public class Console {
     Scanner scanner;
     ArrayList<SavedBoard> savedBoards;
 
-    // modifies: this
-    // effects: creates new console with new scanner and no saved boards
+    // MODIFIES: this
+    // EFFECTS: creates new console with new scanner and no saved boards
     public Console() {
         scanner = new Scanner(System.in);
         savedBoards = new ArrayList<SavedBoard>();
     }
 
-    // effects: runs main loop
+    // EFFECTS: runs main loop
     public void run() {
         boolean running = true;
         while (running) {
@@ -40,6 +43,12 @@ public class Console {
                     handleEditSavedBoard();
                     break;
                 case "5":
+                    handleSaveBoardsToFile();
+                    break;
+                case "6":
+                    handleLoadBoardsFromFile();
+                    break;
+                case "7":
                     running = false;
                     System.out.println("Goodbye!");
                     break;
@@ -49,19 +58,21 @@ public class Console {
         }
     }
 
-    // effects: prints menu
+    // EFFECTS: prints menu
     private void printMenu() {
         System.out.println("\n--- Sudoku Solver ---");
         System.out.println("1) Input an unsolved board and view solution (plus save).");
         System.out.println("2) View all saved board pairings.");
         System.out.println("3) Delete a saved board pairing.");
         System.out.println("4) Edit name/note of a saved board pairing.");
-        System.out.println("5) Exit.");
+        System.out.println("5) Save all boards to file.");
+        System.out.println("6) Load boards from file.");
+        System.out.println("7) Exit.");
         System.out.print("Choose an option: ");
     }
 
-    // modifies: this
-    // effects: inputs sudoku board, solves it and saves the pairing if the user
+    // MODIFIES: this
+    // EFFECTS: inputs sudoku board, solves it and saves the pairing if the user
     // wants to
     private void handleInputBoard() {
         System.out.println("\nPlease input 9 lines, each with 9 digits (0 for empty), separated by spaces.");
@@ -119,8 +130,8 @@ public class Console {
         }
     }
 
-    // modifies: this
-    // effects: saves a board pairing with a name and note
+    // MODIFIES: this
+    // EFFECTS: saves a board pairing with a name and note
     private void saveBoardPairing(Board unsolved, Board solved) {
         System.out.print("Enter a name for this board pairing: ");
         String name = scanner.nextLine();
@@ -133,7 +144,7 @@ public class Console {
         System.out.println("Saved board pairing!");
     }
 
-    // effects: allows the user to pick which board they want to see
+    // EFFECTS: allows the user to pick which board they want to see
     private void handleViewSavedBoards() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards.");
@@ -157,7 +168,7 @@ public class Console {
         }
     }
 
-    // effects: prints name, note, unsolved board, and solved board
+    // EFFECTS: prints name, note, unsolved board, and solved board
     private void displaySavedBoard(SavedBoard sb) {
         System.out.println("\nName: " + sb.getName());
         System.out.println("Note: " + sb.getNote());
@@ -167,8 +178,8 @@ public class Console {
         printBoard(sb.getSolved());
     }
 
-    // modifies: this
-    // effects: deletes the indicated board pairing
+    // MODIFIES: this
+    // EFFECTS: deletes the indicated board pairing
     private void handleDeleteSavedBoard() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards to delete.");
@@ -189,8 +200,8 @@ public class Console {
         }
     }
 
-    // modifies: this
-    // effects: enables the user to edit the name and note of a board pairing
+    // MODIFIES: this
+    // EFFECTS: enables the user to edit the name and note of a board pairing
     private void handleEditSavedBoard() {
         if (savedBoards.isEmpty()) {
             System.out.println("\nNo saved boards to edit.");
@@ -221,7 +232,33 @@ public class Console {
         }
     }
 
-    // effects: prints out given board
+    // EFFECTS: saves saved boards in Json file
+    private void handleSaveBoardsToFile() {
+        System.out.println("\nSaving boards");
+        JsonWriter writer = new JsonWriter("./data/savedboards.json");
+        try {
+            writer.open();
+            writer.write(savedBoards);
+            writer.close();
+            System.out.println("Save successful!");
+        } catch (IOException e) {
+            System.out.println("Failed to save boards: " + e.getMessage());
+        }
+    }
+
+    // EFFECTS: loads saved boards from Json file
+    private void handleLoadBoardsFromFile() {
+        System.out.println("\nLoading boards");
+        JsonReader reader = new JsonReader("./data/savedboards.json");
+        try {
+            savedBoards = reader.read();
+            System.out.println("Load successful! " + savedBoards.size() + " boards loaded.");
+        } catch (Exception e) {
+            System.out.println("Failed to load boards: " + e.getMessage());
+        }
+    }
+
+    // EFFECTS: prints out given board
     private void printBoard(Board b) {
         if (b == null) {
             System.out.println("No board to display.");
@@ -237,7 +274,7 @@ public class Console {
         }
     }
 
-    // effects: handles all int inputs
+    // EFFECTS: handles all int inputs
     private int readInt() {
         int val = -1;
         try {
