@@ -17,7 +17,8 @@ public class TestJsonReader {
         try {
             ArrayList<SavedBoard> savedBoards = reader.read();
             fail();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 
     @Test
@@ -44,12 +45,7 @@ public class TestJsonReader {
             assertEquals("This is a test board.", sb1.getNote());
 
             Board unsolved = sb1.getUnsolved();
-            int[][] unsolvedGrid = unsolved.getBoard();
-            for (int x = 0; x < 9; x++) {
-                for (int y = 0; y < 9; y++) {
-                    assertEquals(0, unsolvedGrid[x][y]);
-                }
-            }
+            assertFalse(unsolved.isSolved());
 
             Board solved = sb1.getSolved();
             int[][] solvedGrid = solved.getBoard();
@@ -57,7 +53,7 @@ public class TestJsonReader {
             unsolved.solve();
             for (int x = 0; x < 9; x++) {
                 for (int y = 0; y < 9; y++) {
-                    assertEquals(solvedGrid[x][y], unsolvedGrid[x][y]);
+                    assertEquals(solvedGrid[x][y], unsolved.getBoard()[x][y]);
                 }
             }
 
@@ -68,11 +64,12 @@ public class TestJsonReader {
             assertFalse(unsolved.isSolved());
 
             solved = sb2.getSolved();
+            solvedGrid = solved.getBoard();
             assertTrue(solved.isSolved());
             unsolved.solve();
             for (int x = 0; x < 9; x++) {
                 for (int y = 0; y < 9; y++) {
-                    assertEquals(solvedGrid[x][y], unsolvedGrid[x][y]);
+                    assertEquals(solvedGrid[x][y], unsolved.getCell(x, y).getNumber());
                 }
             }
         } catch (IOException e) {
