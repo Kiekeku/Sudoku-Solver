@@ -1,5 +1,6 @@
 package persistence;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import model.Board;
@@ -8,12 +9,12 @@ public class JsonReader {
 
     // modifies: this
     // effetcs: creates a reader that reads from the file at the given path
-    public JsonReader() {
+    public JsonReader(String source) {
 
     }
 
     // effects: returns list of saved boards in the given file
-    private ArrayList<SavedBoard> read() {
+    public ArrayList<SavedBoard> read() throws IOException {
         return new ArrayList<SavedBoard>(); //stub
     }
 
