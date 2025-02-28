@@ -13,3 +13,6 @@ I want to build a program that takes in an unsolved sudoku board, solves it, and
 - As a user, I want to be able to delete, name, and add a note to each saved board pairing
 - As a user, I want to be able to save my board pairings (if I want to)
 - As a user, I want to be able to load all of my board pairings (if I want to)
+
+## Sources
+https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo

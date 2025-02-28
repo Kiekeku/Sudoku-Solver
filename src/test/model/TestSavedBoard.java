@@ -43,4 +43,4 @@ public class TestSavedBoard {
         assertEquals("testing", test.getName());
         assertEquals("t2", test.getNote());
     }
-} 
+}

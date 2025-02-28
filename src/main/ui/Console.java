@@ -23,6 +23,7 @@ public class Console {
     }
 
     // EFFECTS: runs main loop
+    @SuppressWarnings("methodlength")
     public void run() {
         boolean running = true;
         while (running) {
@@ -53,7 +54,7 @@ public class Console {
                     System.out.println("Goodbye!");
                     break;
                 default:
-                    System.out.println("Invalid input. Please choose 1-5.");
+                    System.out.println("Invalid input. Please choose 1-7.");
             }
         }
     }
@@ -76,24 +77,34 @@ public class Console {
     // wants to
     private void handleInputBoard() {
         System.out.println("\nPlease input 9 lines, each with 9 digits (0 for empty), separated by spaces.");
+        int[][] unsolved = handleUnsolved();
+        Board unsolvedBoard = new Board();
+        unsolvedBoard.fill(unsolved);
+        Board solvedBoard = new Board();
+        solvedBoard.fill(unsolved);
+        if (solvedBoard.solve()) {
+            System.out.println("\nSolution found:");
+            printBoard(solvedBoard);
+        } else {
+            System.out.println("\nThis board is unsolvable.");
+        }
+        System.out.print("Do you want to save this board pairing? (y for yes) ");
+        String input = scanner.nextLine().toLowerCase();
+        if ("y".equals(input)) {
+            saveBoardPairing(unsolvedBoard, solvedBoard);
+        }
+    }
+
+    private int[][] handleUnsolved() {
         int[][] unsolved = new int[9][9];
         for (int row = 0; row < 9; row++) {
             while (true) {
-                System.out.print("Row " + (row + 1) + ": ");
-                String[] input = scanner.nextLine().trim().split(" ");
-                if (input.length != 9) {
-                    System.out.println("Invalid input. Please enter exactly 9 integers.");
-                    continue;
-                }
+                String[] input = handleStringInput(row);
                 boolean validRow = true;
                 for (int col = 0; col < 9; col++) {
                     try {
                         int val = Integer.parseInt(input[col]);
-                        if (val < 0 || val > 9) {
-                            System.out.println("Number out of range (0-9). Re-enter this row.");
-                            validRow = false;
-                            break;
-                        }
+                        validRow = checkIntRange(val);
                         unsolved[row][col] = val;
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid integer. Re-enter this row.");
@@ -106,28 +117,31 @@ public class Console {
                 }
             }
         }
+        return unsolved;
+    }
 
-        // Create a Board for the unsolved puzzle
-        Board unsolvedBoard = new Board();
-        unsolvedBoard.fill(unsolved);
-
-        // Make a copy for solving
-        Board solvedBoard = new Board();
-        solvedBoard.fill(unsolved);
-
-        if (solvedBoard.solve()) {
-            System.out.println("\nSolution found:");
-            printBoard(solvedBoard);
-        } else {
-            System.out.println("\nThis board is unsolvable.");
+    // EFFECTS: handles a string input and ensures that it is the right length
+    private String[] handleStringInput(int row) {
+        String[] input;
+        while (true) {
+            System.out.print("Row " + (row + 1) + ": ");
+            input = scanner.nextLine().trim().split(" ");
+            if (input.length != 9) {
+                System.out.println("Invalid input. Please enter exactly 9 integers.");
+                continue;
+            }
+            break;
         }
+        return input;
+    }
 
-        // Ask user to save
-        System.out.print("Do you want to save this board pairing? (y for yes) ");
-        String input = scanner.nextLine().toLowerCase();
-        if ("y".equals(input)) {
-            saveBoardPairing(unsolvedBoard, solvedBoard);
+    // EFFECTS: makes sure that val is between 0 and 9
+    private boolean checkIntRange(int val) {
+        if (val < 0 || val > 9) {
+            System.out.println("Number out of range (0-9). Re-enter this row.");
+            return false;
         }
+        return true;
     }
 
     // MODIFIES: this
@@ -207,11 +221,7 @@ public class Console {
             System.out.println("\nNo saved boards to edit.");
             return;
         }
-
-        System.out.println("\n--- Edit Name/Note of a Saved Board ---");
-        for (int i = 0; i < savedBoards.size(); i++) {
-            System.out.println((i + 1) + ") " + savedBoards.get(i).getName());
-        }
+        printChoices();
         System.out.print("Select a board index to edit (or anything else to cancel): ");
         int choice = readInt();
         if (choice > 0 && choice <= savedBoards.size()) {
@@ -229,6 +239,14 @@ public class Console {
             System.out.println("Updated board pairing!");
         } else {
             System.out.println("Edit cancelled.");
+        }
+    }
+
+    // EFFECTS: prints out the choices of boards the user has
+    private void printChoices() {
+        System.out.println("\n--- Edit Name/Note of a Saved Board ---");
+        for (int i = 0; i < savedBoards.size(); i++) {
+            System.out.println((i + 1) + ") " + savedBoards.get(i).getName());
         }
     }
 

@@ -1,7 +1,7 @@
 [
     {
-        "note": "1",
-        "name": "test1",
+        "note": "b",
+        "name": "baka",
         "solved": {"grid": [
             [
                 1,
@@ -206,8 +206,8 @@
         ]}
     },
     {
-        "note": "2",
-        "name": "board 2",
+        "note": "schmungus",
+        "name": "kofekp",
         "solved": {"grid": [
             [
                 1,

@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 // represents a sudoku board
 public class Board {
 
@@ -41,7 +44,7 @@ public class Board {
                 for (int y = 0; y < 9; y++) {
                     if (board[x][y].getNumber() == n && !twice) {
                         twice = true;
-                    } else if (board[x][y].getNumber() == n && twice) {
+                    } else if (board[x][y].getNumber() == n) {
                         return false;
                     }
                 }
@@ -60,7 +63,7 @@ public class Board {
                 for (int y = 0; y < 9; y++) {
                     if (board[y][x].getNumber() == n && !twice) {
                         twice = true;
-                    } else if (board[y][x].getNumber() == n && twice) {
+                    } else if (board[y][x].getNumber() == n) {
                         return false;
                     }
                 }
@@ -80,7 +83,7 @@ public class Board {
                     for (int y = 0; y < 9; y++) {
                         if (board[x][y].getNumber() == n && board[x][y].getBoxID() == box && !twice) {
                             twice = true;
-                        } else if (board[x][y].getNumber() == n && board[x][y].getBoxID() == box && twice) {
+                        } else if (board[x][y].getNumber() == n && board[x][y].getBoxID() == box) {
                             return false;
                         }
                     }
@@ -136,6 +139,7 @@ public class Board {
         return result;
     }
 
+    // EFFECTS: returns the board as a 2d array of int
     public int[][] getBoard() {
         int[][] answer = new int[9][9];
         for (int x = 0; x < 9; x++) {
@@ -144,6 +148,25 @@ public class Board {
             }
         }
         return answer;
+    }
+
+    // EFFECTS: returns the board as a JsonArray
+    public JSONObject toJson() {
+        JSONObject boardJson = new JSONObject();
+
+        // Convert the 9x9 grid into JSON
+        JSONArray rowsArray = new JSONArray();
+        int[][] grid = getBoard();
+        for (int i = 0; i < 9; i++) {
+            JSONArray rowArray = new JSONArray();
+            for (int j = 0; j < 9; j++) {
+                rowArray.put(grid[i][j]);
+            }
+            rowsArray.put(rowArray);
+        }
+
+        boardJson.put("grid", rowsArray);
+        return boardJson;
     }
 
     // REQUIRES: x and y are between 0 and 8 inclusive

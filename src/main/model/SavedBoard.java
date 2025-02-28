@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // represents an unsolved board, a solved board, a name, and a note
 public class SavedBoard {
     private String name;
@@ -14,6 +16,15 @@ public class SavedBoard {
         this.note = note;
         this.unsolved = unsolved;
         this.solved = solved;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("note", note);
+        json.put("unsolved", unsolved.toJson());
+        json.put("solved", solved.toJson());
+        return json;
     }
 
     public String getName() {

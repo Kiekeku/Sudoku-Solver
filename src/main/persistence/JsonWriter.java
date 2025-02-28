@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import model.Board;
 import model.SavedBoard;
 
 public class JsonWriter {
@@ -46,30 +45,6 @@ public class JsonWriter {
 
     // EFFECTS: converts one SavedBoard object to JSON
     private JSONObject savedBoardToJson(SavedBoard sb) {
-        JSONObject json = new JSONObject();
-        json.put("name", sb.getName());
-        json.put("note", sb.getNote());
-        json.put("unsolved", boardToJson(sb.getUnsolved()));
-        json.put("solved", boardToJson(sb.getSolved()));
-        return json;
-    }
-
-    // EFFECTS: converts a Board to JSON
-    private JSONObject boardToJson(Board board) {
-        JSONObject boardJson = new JSONObject();
-
-        // Convert the 9x9 grid into JSON
-        JSONArray rowsArray = new JSONArray();
-        int[][] grid = board.getBoard();
-        for (int i = 0; i < 9; i++) {
-            JSONArray rowArray = new JSONArray();
-            for (int j = 0; j < 9; j++) {
-                rowArray.put(grid[i][j]);
-            }
-            rowsArray.put(rowArray);
-        }
-
-        boardJson.put("grid", rowsArray);
-        return boardJson;
+        return sb.toJson();
     }
 }
