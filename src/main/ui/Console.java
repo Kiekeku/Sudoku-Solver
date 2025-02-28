@@ -95,6 +95,7 @@ public class Console {
         }
     }
 
+    // EFFECTS: inputs an unsolved board
     private int[][] handleUnsolved() {
         int[][] unsolved = new int[9][9];
         for (int row = 0; row < 9; row++) {

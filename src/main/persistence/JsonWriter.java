@@ -38,6 +38,7 @@ public class JsonWriter {
         writer.print(jsonArray.toString(4));
     }
 
+    // MODIFIES: this
     // EFFECTS: closes this writer
     public void close() {
         writer.close();

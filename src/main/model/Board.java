@@ -3,7 +3,7 @@ package model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// represents a sudoku board
+// represents a sudoku board where 0 represents an unsolved cell
 public class Board {
 
     private Cell[][] board;
@@ -106,7 +106,8 @@ public class Board {
     }
 
     // MODIFIES: this
-    // EFFECTS: returns true if board is solvable. False if not solvable.
+    // EFFECTS: returns true if board is solvable. False if not solvable. Changes
+    // the current board to the solution
     public boolean solve() {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {

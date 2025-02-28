@@ -18,6 +18,7 @@ public class SavedBoard {
         this.solved = solved;
     }
 
+    // EFFECTS: converts a saved board into a JsonObject
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);
