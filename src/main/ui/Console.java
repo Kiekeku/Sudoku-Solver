@@ -227,7 +227,7 @@ public class Console {
             System.out.println("No board to display.");
             return;
         }
-        int[][] grid = b.getBoard(); 
+        int[][] grid = b.getBoard();
         for (int row = 0; row < 9; row++) {
             StringBuilder sb = new StringBuilder();
             for (int col = 0; col < 9; col++) {
@@ -243,7 +243,8 @@ public class Console {
         try {
             String input = scanner.nextLine().trim();
             val = Integer.parseInt(input);
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+        }
         return val;
     }
 }

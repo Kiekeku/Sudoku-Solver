@@ -5,7 +5,7 @@ public class Board {
 
     private Cell[][] board;
 
-    // creates an empty sudoku board
+    // EFFECTS: creates an empty sudoku board
     public Board() {
         board = new Cell[9][9];
         for (int x = 0; x < 9; x++) {
@@ -14,10 +14,10 @@ public class Board {
             }
         }
     }
-    
-    // requires: board must be 9x9
-    // modifies: this
-    // effects: fills the board with the given board
+
+    // REQUIRES: board must be 9x9
+    // MODIFIES: this
+    // EFECTS: fills the board with the given board
     public void fill(int[][] board) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -26,12 +26,12 @@ public class Board {
         }
     }
 
-    // effects: returns true if the current board is solved.
+    // EFFECTS: returns true if the current board is solved.
     public boolean isSolved() {
         return (row() && column() && box() && unsolvedCells()); // stub
     }
 
-    // effects: returns true if there are no duplicates in any row in the current
+    // EFFECTS: returns true if there are no duplicates in any row in the current
     // board
     public boolean row() {
         boolean twice;
@@ -50,7 +50,7 @@ public class Board {
         return true;
     }
 
-    // effects: returns true if there are no duplicates in any column in the given
+    // EFFECTS: returns true if there are no duplicates in any column in the given
     // board
     public boolean column() {
         boolean twice;
@@ -69,7 +69,7 @@ public class Board {
         return true;
     }
 
-    // effects: returns true if there are no duplicates in any box in the given
+    // EFFECTS: returns true if there are no duplicates in any box in the given
     // board
     public boolean box() {
         boolean twice;
@@ -90,7 +90,7 @@ public class Board {
         return true;
     }
 
-    // effects: returns true if there are no unsolved cells in the current board
+    // EFFECTS: returns true if there are no unsolved cells in the current board
     public boolean unsolvedCells() {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -102,8 +102,8 @@ public class Board {
         return true;
     }
 
-    // modifies: this
-    // effects: returns true if board is solvable. False if not solvable.
+    // MODIFIES: this
+    // EFFECTS: returns true if board is solvable. False if not solvable.
     public boolean solve() {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -111,11 +111,11 @@ public class Board {
                     for (int n = 1; n <= 9; n++) {
                         if (isValid(x, y, n)) { // Check if valid
                             setCell(x, y, n);
-    
-                            if (solve()) { 
+
+                            if (solve()) {
                                 return true;
                             }
-    
+
                             setCell(x, y, 0); // Reset if it fails
                         }
                     }
@@ -125,8 +125,9 @@ public class Board {
         }
         return isSolved(); // No empty cells left, solution found
     }
-    // requires: 0 < n < 10 and 0 < x, y < 9
-    // effects: returns true if setting the cell at (x, y) to n is validF
+
+    // REQUIRES: 0 < n < 10 and 0 < x, y < 9
+    // EFFECTS: returns true if setting the cell at (x, y) to n is validF
     public boolean isValid(int x, int y, int n) {
         int temp = board[x][y].getNumber();
         setCell(x, y, n);
@@ -145,15 +146,15 @@ public class Board {
         return answer;
     }
 
-    // requires: x and y are between 0 and 8 inclusive
-    // effects: returns cell at given x and y location
+    // REQUIRES: x and y are between 0 and 8 inclusive
+    // EFFECTS: returns cell at given x and y location
     public Cell getCell(int x, int y) {
         return board[x][y];
     }
 
-    // requires: x and y are between 0 and 8 inclusive and n is between 0 and 9
+    // REQUIRES: x and y are between 0 and 8 inclusive and n is between 0 and 9
     // inclusive
-    // effects: returns cell at given x and y location
+    // EFFECTS: returns cell at given x and y location
     public void setCell(int x, int y, int n) {
         board[x][y] = new Cell(n, 3 * (x / 3) + (y / 3) + 1);
     }

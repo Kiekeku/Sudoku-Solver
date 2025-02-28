@@ -7,13 +7,13 @@ public class SavedBoard {
     private Board unsolved;
     private Board solved;
 
-    // modifies: this
-    // effects: creates a board pairing with the given boards, name, and note
+    // MODIFIES: this
+    // EFFECTS: creates a board pairing with the given boards, name, and note
     public SavedBoard(String name, String note, Board unsolved, Board solved) {
         this.name = name;
         this.note = note;
-        this.unsolved = unsolved; 
-        this.solved = solved; 
+        this.unsolved = unsolved;
+        this.solved = solved;
     }
 
     public String getName() {

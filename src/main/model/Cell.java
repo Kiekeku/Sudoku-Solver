@@ -6,15 +6,15 @@ public class Cell {
     private int number;
     private int boxID;
 
-    // effects: constructs a new cell with the given number and boxID.
+    // EFFECTS: constructs a new cell with the given number and boxID.
     public Cell(int number, int boxID) {
         this.number = number;
         this.boxID = boxID;
     }
 
-    // requires: 0 <= number <= 9
-    // modifies: this
-    // effects: sets this cell's number to number
+    // REQUIRES: 0 <= number <= 9
+    // MODIFIES: this
+    // EFFECTS: sets this cell's number to number
     public void setNumber(int number) {
         this.number = number;
     }

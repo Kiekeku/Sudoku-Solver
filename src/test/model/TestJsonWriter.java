@@ -53,6 +53,7 @@ public class TestJsonWriter {
     @Test
     void testWriterGeneralList() {
         try {
+            // create boards
             Board unsolved1 = new Board();
             int[][] grid1 = new int[9][9];
             grid1[0][0] = 5;
@@ -64,6 +65,7 @@ public class TestJsonWriter {
             solvedGrid1[0][0] = 9;
             solvedGrid1[0][1] = 8;
             solved1.fill(solvedGrid1);
+            solved1.solve();
 
             SavedBoard sb1 = new SavedBoard("Board #1", "Note #1", unsolved1, solved1);
 
@@ -77,6 +79,7 @@ public class TestJsonWriter {
             solvedGrid2[0][0] = 1;
             solvedGrid2[8][8] = 9;
             solved2.fill(solvedGrid2);
+            solved2.solve();
 
             SavedBoard sb2 = new SavedBoard("Board #2", "Note #2", unsolved2, solved2);
 

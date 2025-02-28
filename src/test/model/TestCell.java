@@ -11,7 +11,7 @@ public class TestCell {
 
     @BeforeEach
     void setUp() {
-        test = new Cell(0,1);
+        test = new Cell(0, 1);
     }
 
     @Test
