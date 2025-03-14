@@ -24,6 +24,7 @@ public class TestSavedBoard {
         assertTrue(test.getSolved().isSolved());
         assertEquals("test", test.getName());
         assertEquals("t1", test.getNote());
+        assertEquals("test", test.toString());
     }
 
     @Test

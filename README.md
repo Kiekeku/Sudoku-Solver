@@ -14,5 +14,13 @@ I want to build a program that takes in an unsolved sudoku board, solves it, and
 - As a user, I want to be able to save my board pairings (if I want to)
 - As a user, I want to be able to load all of my board pairings (if I want to)
 
+# Instructions for End User
+
+- You can generate the first required action related to the user story "save the solution and unsolved version together for future reference" by clicking on the "import board and solve" button, filling in the unsolved sudoku, clicking solve, and clicking yes when prompted to save the board
+- You can generate the second required action related to the user story "view all saved board pairings" by clicking on the "View Saved Boards" button on the main menu
+- You can locate my visual component by clicking on the "import board and solve" buttton.
+- You can save the state of my application by clicking on the "Save Boards to File" button
+- You can reload the state of my application by clicking on the "Load Boards from File" button
+
 ## Sources
 https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo

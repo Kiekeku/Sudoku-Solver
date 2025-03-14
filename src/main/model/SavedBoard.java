@@ -51,4 +51,10 @@ public class SavedBoard {
     public Board getSolved() {
         return solved;
     }
+
+    // EFFECTS: overrides toString to make UI easier
+    @Override
+    public String toString() {
+        return name; 
+    }
 }
