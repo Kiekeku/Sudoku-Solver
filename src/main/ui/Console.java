@@ -300,6 +300,7 @@ public class Console {
             String input = scanner.nextLine().trim();
             val = Integer.parseInt(input);
         } catch (NumberFormatException e) {
+            // val stays as -1
         }
         return val;
     }
