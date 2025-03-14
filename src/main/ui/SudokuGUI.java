@@ -1,5 +1,6 @@
 package ui;
 
+// main UI class 
 public class SudokuGUI {
 
     // EFFECTS: sets up a new window and panels
