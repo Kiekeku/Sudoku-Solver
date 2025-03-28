@@ -53,6 +53,5 @@ public class MainMenuPanel extends JPanel {
             System.out.println(event);
         }
         System.exit(0);
-        
     }
 }

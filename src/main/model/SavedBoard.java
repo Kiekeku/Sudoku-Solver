@@ -58,6 +58,6 @@ public class SavedBoard {
     // EFFECTS: overrides toString to make UI easier
     @Override
     public String toString() {
-        return name; 
+        return name;
     }
 }

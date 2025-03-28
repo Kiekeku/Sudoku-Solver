@@ -19,6 +19,8 @@ public class SudokuGUI extends JFrame implements WindowListener {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private ArrayList<SavedBoard> savedBoards = new ArrayList<>();
+    private JsonReader reader;
+    JsonWriter writer;
 
     // EFFECTS: sets up a new window and panels
     public SudokuGUI() {
@@ -97,7 +99,7 @@ public class SudokuGUI extends JFrame implements WindowListener {
 
     // EFFECTS: saves boards to Json files
     public void saveBoardsToFile() {
-        JsonWriter writer = new JsonWriter("./data/savedboards.json");
+        writer = new JsonWriter("./data/savedboards.json");
         try {
             writer.open();
             writer.write(savedBoards);
@@ -111,7 +113,7 @@ public class SudokuGUI extends JFrame implements WindowListener {
     // MODIFIES: this
     // EFFECTS: loads boards from Json file
     public void loadBoardsFromFile() {
-        JsonReader reader = new JsonReader("./data/savedboards.json");
+        reader = new JsonReader("./data/savedboards.json");
         try {
             savedBoards = reader.read();
             JOptionPane.showMessageDialog(this, "Boards loaded successfully! "
