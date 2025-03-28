@@ -127,6 +127,9 @@ public class Board {
                 }
             }
         }
+        if (isSolved()) {
+            EventLog.getInstance().logEvent(new Event("Board solved."));
+        }
         return isSolved(); // No empty cells left, solution found
     }
 

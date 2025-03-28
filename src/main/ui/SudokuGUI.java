@@ -1,16 +1,20 @@
 package ui;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
 
+import model.Event;
+import model.EventLog;
 import model.SavedBoard;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 // main UI class 
-public class SudokuGUI extends JFrame {
+public class SudokuGUI extends JFrame implements WindowListener {
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
@@ -22,6 +26,7 @@ public class SudokuGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
         setLocationRelativeTo(null);
+        addWindowListener(this);
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(new MainMenuPanel(this), "MainMenu");
@@ -29,6 +34,44 @@ public class SudokuGUI extends JFrame {
         cardPanel.add(new SavedBoardsPanel(this), "SavedBoards");
 
         add(cardPanel);
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("Event Log:");
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event);
+        }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        // No action needed
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // No action needed
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        // No action needed
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        // No action needed
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // No action needed
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // No action needed
     }
 
     // EFFECTS: switches the current panel

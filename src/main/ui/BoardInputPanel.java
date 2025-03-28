@@ -120,5 +120,15 @@ public class BoardInputPanel extends JPanel {
             parent.getSavedBoards().add(sb);
             JOptionPane.showMessageDialog(this, "Board pairing saved!");
         }
+        resetTextFields();
+    }
+
+    // EFFECTS: helper method to clear all text fields
+    private void resetTextFields() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                cells[row][col].setText("");
+            }
+        }
     }
 }

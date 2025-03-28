@@ -16,6 +16,7 @@ public class SavedBoard {
         this.note = note;
         this.unsolved = unsolved;
         this.solved = solved;
+        EventLog.getInstance().logEvent(new Event("Board pairing saved."));
     }
 
     // EFFECTS: converts a saved board into a JsonObject
@@ -34,6 +35,7 @@ public class SavedBoard {
 
     public void setName(String newName) {
         this.name = newName;
+        EventLog.getInstance().logEvent(new Event("Edited name of a board."));
     }
 
     public String getNote() {
@@ -42,6 +44,7 @@ public class SavedBoard {
 
     public void setNote(String newNote) {
         this.note = newNote;
+        EventLog.getInstance().logEvent(new Event("Edited note of a board."));
     }
 
     public Board getUnsolved() {

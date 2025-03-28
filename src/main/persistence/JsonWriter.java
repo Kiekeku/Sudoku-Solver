@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.Event;
+import model.EventLog;
 import model.SavedBoard;
 
 public class JsonWriter {
@@ -36,6 +38,7 @@ public class JsonWriter {
         }
         // 4 is for indenting
         writer.print(jsonArray.toString(4));
+        EventLog.getInstance().logEvent(new Event("Saved boards."));
     }
 
     // MODIFIES: this

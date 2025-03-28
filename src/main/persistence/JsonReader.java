@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.Board;
+import model.Event;
+import model.EventLog;
 import model.SavedBoard;
 
 // reads from json files in ./data/
@@ -28,6 +30,7 @@ public class JsonReader {
     public ArrayList<SavedBoard> read() throws IOException {
         String jsonData = readFile(source);
         JSONArray jsonArray = new JSONArray(jsonData);
+        EventLog.getInstance().logEvent(new Event("Loaded boards."));
         return parseSavedBoards(jsonArray);
     }
 

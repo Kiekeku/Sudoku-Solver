@@ -3,12 +3,14 @@ package ui;
 import java.awt.*;
 import javax.swing.*;
 
+import model.Event;
+import model.EventLog;
+
 // class that represents the main menu
 public class MainMenuPanel extends JPanel {
     private SudokuGUI parent;
 
     // EFFECTS: sets up a new main menu panel
-    @SuppressWarnings("methodlength")
     public MainMenuPanel(SudokuGUI parent) {
         this.parent = parent;
         setName("MainMenu");
@@ -24,10 +26,11 @@ public class MainMenuPanel extends JPanel {
         JButton btnLoadFromFile = new JButton("Load Boards from File");
         btnLoadFromFile.addActionListener(e -> parent.loadBoardsFromFile());
         JButton btnExit = new JButton("Exit");
-        btnExit.addActionListener(e -> System.exit(0));
+        btnExit.addActionListener(e -> exit());
         init(gbc, btnInputBoard, btnSavedBoards, btnSaveToFile, btnLoadFromFile, btnExit);
     }
 
+    // EFFECTS: sets up and adds the buttons
     private void init(GridBagConstraints gbc, JButton btnInputBoard, JButton btnSavedBoards, JButton btnSaveToFile,
             JButton btnLoadFromFile, JButton btnExit) {
         gbc.gridx = 0;
@@ -41,5 +44,15 @@ public class MainMenuPanel extends JPanel {
         add(btnLoadFromFile, gbc);
         gbc.gridy = 4;
         add(btnExit, gbc);
+    }
+
+    // EFFECTS: prints out the log
+    private void exit() {
+        System.out.println("Event Log:");
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event);
+        }
+        System.exit(0);
+        
     }
 }
