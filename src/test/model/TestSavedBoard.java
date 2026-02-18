@@ -44,4 +44,16 @@ public class TestSavedBoard {
         assertEquals("testing", test.getName());
         assertEquals("t2", test.getNote());
     }
+
+    @Test
+    public void testNullTextSanitized() {
+        SavedBoard nullTextBoard = new SavedBoard(null, null, unsolved, solved);
+        assertEquals("", nullTextBoard.getName());
+        assertEquals("", nullTextBoard.getNote());
+
+        nullTextBoard.setName(null);
+        nullTextBoard.setNote(null);
+        assertEquals("", nullTextBoard.getName());
+        assertEquals("", nullTextBoard.getNote());
+    }
 }

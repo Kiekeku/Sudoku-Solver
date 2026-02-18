@@ -76,4 +76,17 @@ public class TestJsonReader {
             fail();
         }
     }
+
+    @Test
+    void testReaderMissingTextFields() {
+        try {
+            JsonReader reader = new JsonReader("./data/testReaderMissingText.json");
+            ArrayList<SavedBoard> savedBoards = reader.read();
+            assertEquals(1, savedBoards.size());
+            assertEquals("", savedBoards.get(0).getName());
+            assertEquals("", savedBoards.get(0).getNote());
+        } catch (IOException e) {
+            fail();
+        }
+    }
 }

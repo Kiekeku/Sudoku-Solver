@@ -9,11 +9,20 @@ import model.SavedBoard;
 // class responsible for handling inputs
 public class BoardInputPanel extends JPanel {
     private SudokuGUI parent;
+    private DialogService dialogService;
     private JTextField[][] cells;
+    private JButton btnSolve;
+    private JButton btnBack;
 
     // EFFECTS: sets up a panel for user input
     public BoardInputPanel(SudokuGUI parent) {
+        this(parent, new SwingDialogService());
+    }
+
+    // EFFECTS: sets up a panel for user input with injected dialogs for testing
+    BoardInputPanel(SudokuGUI parent, DialogService dialogService) {
         this.parent = parent;
+        this.dialogService = dialogService;
         setName("BoardInput");
         setLayout(new BorderLayout());
         add(createGridPanel(), BorderLayout.CENTER);
@@ -43,9 +52,9 @@ public class BoardInputPanel extends JPanel {
     // EFFECTS: creates a menu for solving a board
     private JPanel createButtonPanel() {
         JPanel btnPanel = new JPanel();
-        JButton btnSolve = new JButton("Solve");
-        btnSolve.addActionListener(e -> solveBoard());
-        JButton btnBack = new JButton("Back");
+        btnSolve = new JButton("Solve");
+        btnSolve.addActionListener(e -> solveBoardAsync());
+        btnBack = new JButton("Back");
         btnBack.addActionListener(e -> parent.showPanel("MainMenu"));
         btnPanel.add(btnSolve);
         btnPanel.add(btnBack);
@@ -54,21 +63,53 @@ public class BoardInputPanel extends JPanel {
 
     // MODIFIES: this
     // EFFECTS: solves the inputted board
-    private void solveBoard() {
+    private void solveBoardAsync() {
         int[][] grid = readGridFromFields();
         if (grid == null) {
             return;
         }
+
         Board unsolvedBoard = new Board();
         unsolvedBoard.fill(grid);
         Board solvedBoard = new Board();
         solvedBoard.fill(grid);
+        setControlsEnabled(false);
 
-        if (solvedBoard.solve()) {
-            updateGridDisplay(solvedBoard.getBoard());
-            promptAndSaveBoardPairing(unsolvedBoard, solvedBoard);
-        } else {
-            JOptionPane.showMessageDialog(this, "This board is unsolvable.");
+        SwingWorker<Boolean, Void> solveWorker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground() {
+                return solvedBoard.solve();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    if (get()) {
+                        updateGridDisplay(solvedBoard.getBoard());
+                        promptAndSaveBoardPairing(unsolvedBoard, solvedBoard);
+                    } else {
+                        dialogService.showMessage(BoardInputPanel.this, "This board is unsolvable.");
+                    }
+                } catch (Exception e) {
+                    dialogService.showMessage(BoardInputPanel.this,
+                            "An error occurred while solving the board: " + e.getMessage());
+                } finally {
+                    setControlsEnabled(true);
+                }
+            }
+        };
+        solveWorker.execute();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: enables/disables board inputs and action buttons
+    private void setControlsEnabled(boolean isEnabled) {
+        btnSolve.setEnabled(isEnabled);
+        btnBack.setEnabled(isEnabled);
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                cells[row][col].setEditable(isEnabled);
+            }
         }
     }
 
@@ -88,7 +129,7 @@ public class BoardInputPanel extends JPanel {
                         }
                         grid[row][col] = num;
                     } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(this,
+                        dialogService.showMessage(this,
                                 "Invalid input at cell (" + (row + 1) + "," + (col + 1) + ").\n"
                                         + "Please enter a number between 1 and 9 or leave empty.");
                         return null;
@@ -111,14 +152,30 @@ public class BoardInputPanel extends JPanel {
 
     // EFFECTS: sets up a menu to save the board pairing and does so
     private void promptAndSaveBoardPairing(Board unsolvedBoard, Board solvedBoard) {
-        int option = JOptionPane.showConfirmDialog(this,
-                "Solution found! Do you want to save this board pairing?", "Save Board", JOptionPane.YES_NO_OPTION);
+        int option = dialogService.showConfirm(this, "Solution found! Do you want to save this board pairing?",
+                "Save Board", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
-            String name = JOptionPane.showInputDialog(this, "Enter a name for this board pairing:");
-            String note = JOptionPane.showInputDialog(this, "Enter a note or description:");
+            String name = dialogService.showInput(this, "Enter a name for this board pairing:");
+            if (name == null) {
+                dialogService.showMessage(this, "Save canceled.");
+                resetTextFields();
+                return;
+            }
+            name = name.trim();
+            if (name.isEmpty()) {
+                dialogService.showMessage(this, "Board pairing not saved: name cannot be empty.");
+                resetTextFields();
+                return;
+            }
+            String note = dialogService.showInput(this, "Enter a note or description:");
+            if (note == null) {
+                note = "";
+            } else {
+                note = note.trim();
+            }
             SavedBoard sb = new SavedBoard(name, note, unsolvedBoard, solvedBoard);
             parent.getSavedBoards().add(sb);
-            JOptionPane.showMessageDialog(this, "Board pairing saved!");
+            dialogService.showMessage(this, "Board pairing saved!");
         }
         resetTextFields();
     }

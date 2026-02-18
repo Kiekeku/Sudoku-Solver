@@ -8,13 +8,20 @@ import model.SavedBoard;
 public class SavedBoardsPanel extends JPanel {
 
     private SudokuGUI parent;
+    private DialogService dialogService;
     private DefaultListModel<SavedBoard> listModel;
     private JList<SavedBoard> boardList;
     private JTextArea boardDetails;
 
     // EFFECTS: sets up the panel
     public SavedBoardsPanel(SudokuGUI parent) {
+        this(parent, new SwingDialogService());
+    }
+
+    // EFFECTS: sets up the panel with injected dialogs for testing
+    SavedBoardsPanel(SudokuGUI parent, DialogService dialogService) {
         this.parent = parent;
+        this.dialogService = dialogService;
         setName("SavedBoards");
         setLayout(new BorderLayout());
         add(createListScrollPane(), BorderLayout.WEST);
@@ -94,8 +101,7 @@ public class SavedBoardsPanel extends JPanel {
     private void deleteSelectedBoard() {
         SavedBoard sb = boardList.getSelectedValue();
         if (sb != null) {
-            int option = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to delete this board pairing?",
+            int option = dialogService.showConfirm(this, "Are you sure you want to delete this board pairing?",
                     "Delete Board", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 parent.getSavedBoards().remove(sb);
@@ -108,8 +114,8 @@ public class SavedBoardsPanel extends JPanel {
     private void editSelectedBoard() {
         SavedBoard sb = boardList.getSelectedValue();
         if (sb != null) {
-            String newName = JOptionPane.showInputDialog(this, "Enter new name:", sb.getName());
-            String newNote = JOptionPane.showInputDialog(this, "Enter new note:", sb.getNote());
+            String newName = dialogService.showInput(this, "Enter new name:", sb.getName());
+            String newNote = dialogService.showInput(this, "Enter new note:", sb.getNote());
             if (newName != null && !newName.trim().isEmpty()) {
                 sb.setName(newName);
             }

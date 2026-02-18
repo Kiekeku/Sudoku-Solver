@@ -31,7 +31,7 @@ public class Board {
 
     // EFFECTS: returns true if the current board is solved.
     public boolean isSolved() {
-        return (row() && column() && box() && unsolvedCells()); // stub
+        return (row() && column() && box() && hasOnlySolvedValues());
     }
 
     // EFFECTS: returns true if there are no duplicates in any row in the current
@@ -98,6 +98,19 @@ public class Board {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (board[x][y].getNumber() == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // EFFECTS: returns true if every cell contains a value between 1 and 9
+    private boolean hasOnlySolvedValues() {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                int value = board[x][y].getNumber();
+                if (value < 1 || value > 9) {
                     return false;
                 }
             }

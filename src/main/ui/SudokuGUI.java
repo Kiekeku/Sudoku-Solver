@@ -15,15 +15,25 @@ import persistence.JsonWriter;
 
 // main UI class 
 public class SudokuGUI extends JFrame implements WindowListener {
+    private static final String SAVE_PATH = "./data/savedBoards.json";
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private ArrayList<SavedBoard> savedBoards = new ArrayList<>();
     private JsonReader reader;
     JsonWriter writer;
+    private final DialogService dialogService;
+    private final String savePath;
 
     // EFFECTS: sets up a new window and panels
     public SudokuGUI() {
+        this(new SwingDialogService(), SAVE_PATH);
+    }
+
+    // EFFECTS: sets up a new window and panels with injected dependencies for testing
+    SudokuGUI(DialogService dialogService, String savePath) {
+        this.dialogService = dialogService;
+        this.savePath = savePath;
         setTitle("Sudoku Solver");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
@@ -32,8 +42,8 @@ public class SudokuGUI extends JFrame implements WindowListener {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(new MainMenuPanel(this), "MainMenu");
-        cardPanel.add(new BoardInputPanel(this), "BoardInput");
-        cardPanel.add(new SavedBoardsPanel(this), "SavedBoards");
+        cardPanel.add(new BoardInputPanel(this, dialogService), "BoardInput");
+        cardPanel.add(new SavedBoardsPanel(this, dialogService), "SavedBoards");
 
         add(cardPanel);
     }
@@ -99,27 +109,27 @@ public class SudokuGUI extends JFrame implements WindowListener {
 
     // EFFECTS: saves boards to Json files
     public void saveBoardsToFile() {
-        writer = new JsonWriter("./data/savedboards.json");
+        writer = new JsonWriter(savePath);
         try {
             writer.open();
             writer.write(savedBoards);
             writer.close();
-            JOptionPane.showMessageDialog(this, "Boards saved successfully!");
+            dialogService.showMessage(this, "Boards saved successfully!");
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Failed to save boards: " + e.getMessage());
+            dialogService.showMessage(this, "Failed to save boards: " + e.getMessage());
         }
     }
 
     // MODIFIES: this
     // EFFECTS: loads boards from Json file
     public void loadBoardsFromFile() {
-        reader = new JsonReader("./data/savedboards.json");
+        reader = new JsonReader(savePath);
         try {
             savedBoards = reader.read();
-            JOptionPane.showMessageDialog(this, "Boards loaded successfully! "
+            dialogService.showMessage(this, "Boards loaded successfully! "
                     + savedBoards.size() + " boards loaded.");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to load boards: " + e.getMessage());
+            dialogService.showMessage(this, "Failed to load boards: " + e.getMessage());
         }
     }
 

@@ -12,8 +12,8 @@ public class SavedBoard {
     // MODIFIES: this
     // EFFECTS: creates a board pairing with the given boards, name, and note
     public SavedBoard(String name, String note, Board unsolved, Board solved) {
-        this.name = name;
-        this.note = note;
+        this.name = sanitizeText(name);
+        this.note = sanitizeText(note);
         this.unsolved = unsolved;
         this.solved = solved;
         EventLog.getInstance().logEvent(new Event("Board pairing saved."));
@@ -34,7 +34,7 @@ public class SavedBoard {
     }
 
     public void setName(String newName) {
-        this.name = newName;
+        this.name = sanitizeText(newName);
         EventLog.getInstance().logEvent(new Event("Edited name of a board."));
     }
 
@@ -43,7 +43,7 @@ public class SavedBoard {
     }
 
     public void setNote(String newNote) {
-        this.note = newNote;
+        this.note = sanitizeText(newNote);
         EventLog.getInstance().logEvent(new Event("Edited note of a board."));
     }
 
@@ -59,5 +59,13 @@ public class SavedBoard {
     @Override
     public String toString() {
         return name;
+    }
+
+    // EFFECTS: converts null text values to empty strings for JSON compatibility
+    private String sanitizeText(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text;
     }
 }

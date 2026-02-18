@@ -58,8 +58,8 @@ public class JsonReader {
 
     // EFFECTS: parses a single SavedBoard from JSON
     private SavedBoard parseSavedBoard(JSONObject json) {
-        String name = json.getString("name");
-        String note = json.getString("note");
+        String name = json.optString("name", "");
+        String note = json.optString("note", "");
 
         // parse "unsolved" Board
         JSONObject unsolvedJson = json.getJSONObject("unsolved");

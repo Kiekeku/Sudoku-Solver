@@ -21,11 +21,8 @@ public class TestJsonWriter {
 
     @Test
     void testWriterInvalidFile() {
-        try {
-            JsonWriter writer = new JsonWriter("./data/\0illegalFileName.json");
-            writer.open();
-        } catch (IOException e) {
-        }
+        JsonWriter writer = new JsonWriter("./data/\0illegalFileName.json");
+        assertThrows(IOException.class, writer::open);
     }
 
     @Test
@@ -128,6 +125,30 @@ public class TestJsonWriter {
             int[][] readSolvedGrid2 = readSb2.getSolved().getBoard();
             assertEquals(1, readSolvedGrid2[0][0]);
             assertEquals(9, readSolvedGrid2[8][8]);
+        } catch (IOException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testWriterHandlesNullTextFields() {
+        try {
+            Board unsolved = new Board();
+            Board solved = new Board();
+            solved.solve();
+            testBoards.add(new SavedBoard(null, null, unsolved, solved));
+
+            String testFile = "./data/testWriterNullText.json";
+            JsonWriter writer = new JsonWriter(testFile);
+            writer.open();
+            writer.write(testBoards);
+            writer.close();
+
+            JsonReader reader = new JsonReader(testFile);
+            ArrayList<SavedBoard> readBoards = reader.read();
+            assertEquals(1, readBoards.size());
+            assertEquals("", readBoards.get(0).getName());
+            assertEquals("", readBoards.get(0).getNote());
         } catch (IOException e) {
             fail();
         }
