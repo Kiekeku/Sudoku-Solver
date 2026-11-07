@@ -16,11 +16,15 @@ $mainSources = Get-ChildItem -Recurse src/main -Filter *.java | ForEach-Object F
 $testSources = Get-ChildItem -Recurse src/test -Filter *.java | ForEach-Object FullName
 
 javac -cp "lib/json-20250107.jar" -d $mainOut $mainSources
-javac -cp "$mainOut;lib/json-20250107.jar;lib/junit-platform-console-standalone-1.10.2.jar" -d $testOut $testSources
+if ($LASTEXITCODE -ne 0) { throw "Application compilation failed (exit code $LASTEXITCODE)." }
 
-java "-javaagent:lib/jacocoagent.jar=destfile=$execFile,append=false" -jar lib/junit-platform-console-standalone-1.10.2.jar `
+javac -cp "$mainOut;lib/json-20250107.jar;lib/junit-platform-console-standalone-1.10.2.jar" -d $testOut $testSources
+if ($LASTEXITCODE -ne 0) { throw "Test compilation failed (exit code $LASTEXITCODE)." }
+
+java "-javaagent:lib/jacocoagent.jar=destfile=$execFile,append=false" -jar lib/junit-platform-console-standalone-1.10.2.jar execute `
     --class-path "$mainOut;$testOut;lib/json-20250107.jar" `
-    --scan-class-path
+    --scan-class-path --fail-if-no-tests
+if ($LASTEXITCODE -ne 0) { throw "JUnit failed (exit code $LASTEXITCODE)." }
 
 java -jar lib/jacococli.jar report $execFile `
     --classfiles $mainOut `
@@ -28,6 +32,7 @@ java -jar lib/jacococli.jar report $execFile `
     --xml "$reportDir/jacoco.xml" `
     --csv "$reportDir/jacoco.csv" `
     --html "$reportDir/html"
+if ($LASTEXITCODE -ne 0) { throw "JaCoCo report generation failed (exit code $LASTEXITCODE)." }
 
 [xml]$xml = Get-Content "$reportDir/jacoco.xml"
 

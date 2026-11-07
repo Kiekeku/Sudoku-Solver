@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test and coverage
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Run JUnit and JaCoCo
+        shell: pwsh
+        run: ./scripts/run-coverage.ps1
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v6
+        with:
+          name: jacoco-coverage
+          path: coverage/
+          if-no-files-found: error
