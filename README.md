@@ -1,39 +1,41 @@
-# Sudoku Solver 
+# Sudoku Solver
 
-## Introduction
+I built this Java Swing desktop app to solve Sudoku puzzles and save the original puzzle alongside its solution. The solver uses backtracking, and saved puzzles can be named, annotated, and loaded from a local JSON file.
 
-I want to build a program that takes in an unsolved sudoku board, solves it, and stores both boards together as a pairing for future reference. If the inputted board lines up with an already solved and stored board, it will just output the stored solution instead. I want the user to be able to name, delete, and add notes to each board pairing. This will help anyone who wants to confirm if a solution is correct or help store certain baords and strategies on how to solve each stored board. This interests me because I enjoy playing sudoku, and I enjoy solving complicated and intricate problems, such as sudoku.
+## Run the app
 
-## User Stories
-***Phase 2 User Stories***
-- As a user, I want to be able to input an unsolved sudoku board
-- As a user, I want to be able to view the solution to the inputted sudoku board
-- As a user, I want to be able to save the solution and unsolved version together for future reference
-- As a user, I want to be able to view all saved board pairings
-- As a user, I want to be able to delete, name, and add a note to each saved board pairing
-- As a user, I want to be able to save my board pairings (if I want to)
-- As a user, I want to be able to load all of my board pairings (if I want to)
+Use PowerShell on Windows with a graphical desktop and a JDK on your PATH. The project was verified with JDK 21. From the repository root, compile and launch the app with the bundled JSON library.
 
-## Instructions for End User
+```powershell
+$sources = Get-ChildItem -Path src/main -Recurse -Filter *.java | ForEach-Object FullName
+New-Item -ItemType Directory -Force .tmp_coverage/main | Out-Null
+javac -cp "lib/json-20250107.jar" -d .tmp_coverage/main $sources
+if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
+java -cp ".tmp_coverage/main;lib/json-20250107.jar" ui.Main
+```
 
-- You can generate the first required action related to the user story "save the solution and unsolved version together for future reference" by clicking on the "import board and solve" button, filling in the unsolved sudoku, clicking solve, and clicking yes when prompted to save the board
-- You can generate the second required action related to the user story "view all saved board pairings" by clicking on the "View Saved Boards" button on the main menu
-- You can locate my visual component by clicking on the "import board and solve" buttton.
-- You can save the state of my application by clicking on the "Save Boards to File" button
-- You can reload the state of my application by clicking on the "Load Boards from File" button
+1. Select **Input Board & Solve**, enter the known digits, and leave unknown cells blank.
+2. Select **Solve**. When a solution appears, you can save the puzzle and solution together with a name and an optional note.
+3. Open **View Saved Boards** to revisit, edit, or delete a saved pair.
+4. Use **Save Boards to File** and **Load Boards from File** to write or restore your collection.
 
 ## Test Coverage
 
-Run coverage from PowerShell:
+From the repository root, run the bundled JUnit and JaCoCo tools through PowerShell. The full suite needs a graphical desktop because some tests instantiate Swing windows.
 
 ```powershell
 .\scripts\run-coverage.ps1
 ```
 
-This generates:
-- XML: `coverage/jacoco.xml`
-- CSV: `coverage/jacoco.csv`
-- HTML: `coverage/html/index.html`
+On JDK 21, all **47 tests passed** across the solver, JSON persistence, and Swing UI.
+
+| JaCoCo metric | Coverage |
+| --- | ---: |
+| Lines | 93.11% |
+| Branches | 93.56% |
+| Instructions | 93.42% |
+
+The script generates an HTML report at `coverage/html/index.html`, along with `coverage/jacoco.xml` and `coverage/jacoco.csv`.
 
 ## Phase 4: Task 2:
 Event Log:
